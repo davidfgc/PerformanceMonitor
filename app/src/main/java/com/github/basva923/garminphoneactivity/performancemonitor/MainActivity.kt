@@ -12,7 +12,7 @@ import com.github.basva923.garminphoneactivity.controller.ActivityController
 import com.github.basva923.garminphoneactivity.controller.Controllers
 import com.github.basva923.garminphoneactivity.garmin.MockActivityControl
 import com.github.basva923.garminphoneactivity.model.Model
-import com.github.basva923.garminphoneactivity.performancemonitor.sensorstracker.SensorsTrackerScreen
+import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionScreen
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.GarminPhoneActivityTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     setContent {
       GarminPhoneActivityTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          SensorsTrackerScreen(Modifier.padding(innerPadding))
+          SessionScreen(Modifier.padding(innerPadding))
         }
       }
     }

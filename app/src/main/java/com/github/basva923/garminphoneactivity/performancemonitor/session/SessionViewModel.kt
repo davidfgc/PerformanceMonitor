@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.sensorstracker
+package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import androidx.lifecycle.ViewModel
 import com.github.basva923.garminphoneactivity.model.LiveTrackProperty
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class SensorsTrackerViewModel: ViewModel(), ModelUpdateReceiver {
+class SessionViewModel: ViewModel(), ModelUpdateReceiver {
   private val _heartRate = MutableStateFlow(0)
   val heartRate: StateFlow<Int> = _heartRate.asStateFlow()
 

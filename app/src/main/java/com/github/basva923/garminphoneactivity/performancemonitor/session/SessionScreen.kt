@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.sensorstracker
+package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SensorsTrackerScreen(modifier: Modifier = Modifier, viewModel: SensorsTrackerViewModel = viewModel()) {
+fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = viewModel()) {
   val heartRate by viewModel.heartRate.collectAsState()
   val heatRateZone by viewModel.zone.collectAsState()
   val time by viewModel.time.collectAsState()
