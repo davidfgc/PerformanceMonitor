@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = viewModel()) {
   val uiState by viewModel.uiState.collectAsState()
   val sessionData by viewModel.sessionData.collectAsState()
+  val backgroundColor by viewModel.backgroundColor.collectAsState()
 
   val context = LocalContext.current
   LaunchedEffect(key1 = Unit) {
@@ -30,7 +32,7 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
   }
 
   when (uiState) {
-    is SessionUiState.Success -> SessionLayout(sessionData, modifier)
+    is SessionUiState.Success -> SessionLayout(sessionData, modifier.background(Color(backgroundColor)))
     is SessionUiState.Error -> SessionErrorLayout((uiState as SessionUiState.Error).message, modifier)
     is SessionUiState.Loading -> SessionLoadingLayout(modifier)
   }

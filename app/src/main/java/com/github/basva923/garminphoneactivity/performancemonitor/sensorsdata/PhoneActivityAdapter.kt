@@ -62,6 +62,7 @@ class PhoneActivityAdapter : ModelUpdateReceiver {
   }
 
   override fun onModelUpdate()  {
+    Model.track.liveTrackInfo.hrZoneFinder.valueToZone(0)
     lastSessionData = object: SessionData {
       override val heartRate: Int = Model.track.liveTrackInfo
         .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE).toInt()
