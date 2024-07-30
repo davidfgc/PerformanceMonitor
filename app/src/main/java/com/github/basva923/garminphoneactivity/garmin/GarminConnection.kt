@@ -6,9 +6,10 @@ import com.garmin.android.connectiq.ConnectIQ
 import com.garmin.android.connectiq.ConnectIQ.IQApplicationInfoListener
 import com.garmin.android.connectiq.IQApp
 import com.garmin.android.connectiq.IQDevice
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
 
 
-class GarminConnection(context: Context) : ConnectIQ.ConnectIQListener,
+class GarminConnection(context: Context) :
     ConnectIQ.IQApplicationEventListener, ConnectIQ.IQSendMessageListener,
     IQApplicationInfoListener {
     private val TAG = "PhoneActivityApp"
@@ -20,8 +21,22 @@ class GarminConnection(context: Context) : ConnectIQ.ConnectIQListener,
 
     val messageReceivers = mutableSetOf<GarminMessageReceiver>()
 
-    init {
-        _connectIQ.initialize(context, true, this)
+    fun initialize(context: Context, autoUI: Boolean = false, onResult: (ConnectionResult) -> Unit = {}) {
+        _connectIQ.initialize(context, autoUI, object: ConnectIQ.ConnectIQListener {
+            override fun onSdkShutDown() {
+                Log.d(TAG, "GARMIN connect sdk shutdown")
+            }
+
+            override fun onInitializeError(p0: ConnectIQ.IQSdkErrorStatus?) {
+                onResult(ConnectionResult.Error("GARMIN initialize sdk: error: ${p0?.name}"))
+            }
+
+            override fun onSdkReady() {
+                onResult(ConnectionResult.Success)
+                Log.d(TAG, "Garmin sdk ready")
+                findAndSetupGarminDevice()
+            }
+        })
     }
 
     fun isConnected(): Boolean {
@@ -46,20 +61,6 @@ class GarminConnection(context: Context) : ConnectIQ.ConnectIQListener,
         _device = device
 
         _connectIQ.registerForAppEvents(_device, _app, this)
-    }
-
-    override fun onSdkShutDown() {
-        Log.e(TAG, "GARMIN connect sdk shutdown")
-    }
-
-    override fun onInitializeError(p0: ConnectIQ.IQSdkErrorStatus?) {
-        Log.e(TAG, "GARMIN connect sdk: init failed")
-    }
-
-    override fun onSdkReady() {
-        Log.w(TAG, "Garmin sdk ready")
-
-        findAndSetupGarminDevice()
     }
 
     override fun onMessageReceived(
