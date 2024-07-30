@@ -12,7 +12,6 @@ android {
         }
     }
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
 
     defaultConfig {
         applicationId "com.github.basva923.garminphoneactivity"
@@ -39,6 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+    namespace 'com.github.basva923.garminphoneactivity'
 }
 
 dependencies {
@@ -66,7 +66,7 @@ dependencies {
 // https://mvnrepository.com/artifact/joda-time/joda-time
     implementation group: 'joda-time', name: 'joda-time', version: '2.10.6'
 
-    compile files('libs/connectiq.jar')
+    implementation files('libs/connectiq.jar')
 
     implementation ('com.mapbox.mapboxsdk:mapbox-android-sdk:9.4.0'){
         exclude group: 'group_name', module: 'module_name'
