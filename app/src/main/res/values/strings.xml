@@ -13,4 +13,5 @@
     <string name="FTP">FTP (Functional Threshold Power)</string>
     <string name="ftp_heart_rate">FTP Heart Rate</string>
     <string name="power_algorithm">Power Algorithm</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
