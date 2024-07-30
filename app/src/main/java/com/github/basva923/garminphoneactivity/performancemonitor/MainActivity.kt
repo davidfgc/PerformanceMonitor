@@ -10,6 +10,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.github.basva923.garminphoneactivity.controller.ActivityController
 import com.github.basva923.garminphoneactivity.controller.Controllers
+import com.github.basva923.garminphoneactivity.garmin.GarminActivityControl
+import com.github.basva923.garminphoneactivity.garmin.GarminConnection
 import com.github.basva923.garminphoneactivity.garmin.MockActivityControl
 import com.github.basva923.garminphoneactivity.model.Model
 import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionScreen
@@ -18,7 +20,6 @@ import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.Garmi
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setupActivity()
     enableEdgeToEdge()
     setContent {
       GarminPhoneActivityTheme {
@@ -29,12 +30,4 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  private fun setupActivity() {
-//    Controllers.activityController = ActivityController(
-//      Model.track, GarminActivityControl(
-//        GarminConnection(this)
-//      )
-//    )
-    Controllers.activityController = ActivityController(Model.track, MockActivityControl())
-  }
 }

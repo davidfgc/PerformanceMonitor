@@ -1,42 +1,34 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.github.basva923.garminphoneactivity.model.LiveTrackProperty
-import com.github.basva923.garminphoneactivity.model.Model
-import com.github.basva923.garminphoneactivity.model.ModelUpdateReceiver
-import com.github.basva923.garminphoneactivity.model.PropertyType
+import androidx.lifecycle.viewModelScope
+import com.github.basva923.garminphoneactivity.performancemonitor.sensorsdata.PhoneActivityAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class SessionViewModel: ViewModel(), ModelUpdateReceiver {
-  private val _heartRate = MutableStateFlow(0)
-  val heartRate: StateFlow<Int> = _heartRate.asStateFlow()
+class SessionViewModel: ViewModel() {
 
-  private val _zone = MutableStateFlow(0)
-  val zone: StateFlow<Int> = _zone.asStateFlow()
+  private val _sessionData = MutableStateFlow<SessionData>(EmptySessionData())
+  val sessionData = _sessionData.asStateFlow()
 
-  private val _time = MutableStateFlow(0)
-  val time: StateFlow<Int> = _time.asStateFlow()
+  private lateinit var phoneActivityAdapter: PhoneActivityAdapter
 
-  private val _altitude = MutableStateFlow(0)
-  val altitude: StateFlow<Int> = _altitude.asStateFlow()
-
-  init {
-    Model.modelUpdateReceivers.add(this)
+  fun register(context: Context) {
+    phoneActivityAdapter = PhoneActivityAdapter(context).apply {
+      register()
+    }
+    viewModelScope.launch {
+      phoneActivityAdapter.sensorsDataFlow.collectLatest {
+        _sessionData.emit(it)
+      }
+    }
   }
 
-  override fun onModelUpdate() {
-    _heartRate.value = Model.track.liveTrackInfo
-      .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE).toInt()
-
-    _time.value = Model.track.liveTrackInfo
-      .getValue(PropertyType.CURRENT, LiveTrackProperty.TIME).toInt()
-
-    _altitude.value = Model.track.liveTrackInfo
-      .getValue(PropertyType.CURRENT, LiveTrackProperty.ALTITUDE).toInt()
-
-    _zone.value = Model.track.liveTrackInfo
-      .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE_ZONE).toInt()
+  override fun onCleared() {
+    super.onCleared()
+    phoneActivityAdapter.unregister()
   }
 }

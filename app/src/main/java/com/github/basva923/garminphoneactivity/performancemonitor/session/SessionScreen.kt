@@ -6,18 +6,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = viewModel()) {
-  val heartRate by viewModel.heartRate.collectAsState()
-  val heatRateZone by viewModel.zone.collectAsState()
-  val time by viewModel.time.collectAsState()
-  val altitude by viewModel.altitude.collectAsState()
+  val sessionData by viewModel.sessionData.collectAsState()
+
+  val context = LocalContext.current
+  LaunchedEffect(key1 = Unit) {
+    viewModel.register(context)
+  }
 
   Column(
     modifier = modifier.fillMaxSize(),
@@ -25,19 +29,19 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
     verticalArrangement = Arrangement.Center
   ) {
     Text(
-      text = "HR $heartRate!",
+      text = "HR ${sessionData.heartRate}!",
       style = MaterialTheme.typography.displayMedium
     )
     Text(
-      text = "Zone: $heatRateZone",
+      text = "Zone: ${sessionData.heartRateZone}",
       style = MaterialTheme.typography.displayMedium
     )
     Text(
-      text = "Time: $time",
+      text = "Time: ${sessionData.time}",
       style = MaterialTheme.typography.displayMedium
     )
     Text(
-      text = "Altitude: $altitude",
+      text = "Altitude: ${sessionData.altitude}",
       style = MaterialTheme.typography.displayMedium
     )
   }
