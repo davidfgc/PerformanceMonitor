@@ -10,7 +10,8 @@ object Settings {
     var cyclingPosition = CyclingPosition.DROPS
     var trackSurface = TrackSurface.ASPHALT
     var ftp = 300
-    var ftpHeartRate = 180
+    private const val age = 40
+    var ftpHeartRate = 220 - age
     var totalMass = 85
     var powerAlgorithm = PowerAlgorithm.REAL
 

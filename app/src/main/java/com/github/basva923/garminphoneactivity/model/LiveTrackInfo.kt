@@ -47,12 +47,12 @@ class LiveTrackInfo(private val track: Track) {
 
     val hrZoneFinder = ZoneFinder(
         arrayOf(
-            Pair(0, 69),
-            Pair(69, 84),
-            Pair(84, 95),
-            Pair(95, 106),
-            Pair(106, 1000)
-        ), Settings.ftp
+            Pair(0, 59),
+            Pair(60, 69),
+            Pair(70, 79),
+            Pair(80, 89),
+            Pair(90, 100)
+        ), Settings.ftpHeartRate
     )
 
     init {

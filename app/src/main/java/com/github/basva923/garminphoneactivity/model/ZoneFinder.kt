@@ -1,6 +1,6 @@
 package com.github.basva923.garminphoneactivity.model
 
-class ZoneFinder(private val zonesPercents: Array<Pair<Int, Int>>, var unitValue: Int) {
+class ZoneFinder(val zonesPercents: Array<Pair<Int, Int>>, var unitValue: Int) {
 
     fun valueToZone(value: Int): Int {
         for (nr in zonesPercents.indices) {
