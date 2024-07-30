@@ -10,8 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.github.basva923.garminphoneactivity.controller.ActivityController
 import com.github.basva923.garminphoneactivity.controller.Controllers
-import com.github.basva923.garminphoneactivity.garmin.GarminActivityControl
-import com.github.basva923.garminphoneactivity.garmin.GarminConnection
 import com.github.basva923.garminphoneactivity.garmin.MockActivityControl
 import com.github.basva923.garminphoneactivity.model.Model
 import com.github.basva923.garminphoneactivity.performancemonitor.sensorstracker.SensorsTrackerScreen
