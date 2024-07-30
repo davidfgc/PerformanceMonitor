@@ -8,10 +8,10 @@ import com.garmin.android.connectiq.IQApp
 import com.garmin.android.connectiq.IQDevice
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
 
-
 class GarminConnection(context: Context) :
     ConnectIQ.IQApplicationEventListener, ConnectIQ.IQSendMessageListener,
-    IQApplicationInfoListener {
+    IQApplicationInfoListener
+{
     private val TAG = "PhoneActivityApp"
     private val CONNECT_IQ_UUID = "26bbbf75-e075-4760-b5a3-3ec09a613b59"
     private var _device: IQDevice? = null
@@ -39,8 +39,29 @@ class GarminConnection(context: Context) :
         })
     }
 
-    fun isConnected(): Boolean {
-        return _device != null && _app != null
+    private fun findAndSetupGarminDevice() {
+        Log.w(TAG, "Found ${_connectIQ.connectedDevices.size} known devices.")
+        for (device in _connectIQ.connectedDevices) {
+
+            if (_connectIQ.getDeviceStatus(device) != IQDevice.IQDeviceStatus.CONNECTED) {
+                Log.e(TAG, "Failed to connect to ${device.friendlyName}")
+                continue
+            }
+
+            Log.w(TAG, "Connected to device ${device.friendlyName}")
+
+            registerForConnectionLost(device)
+            _device = device
+            val app = IQApp(CONNECT_IQ_UUID)
+            setupApplication(app, _device!!)
+            // Fix for bug https://forums.garmin.com/developer/connect-iq/i/bug-reports/mobile-sdk-not-working-after-latest-garmin-connect-android-app-update
+            //            _connectIQ.getApplicationInfo(
+//                CONNECT_IQ_UUID,
+//                device,
+//                this
+//            )
+            return
+        }
     }
 
     fun sendMessage(msg: GarminMessage): Boolean {
@@ -50,6 +71,10 @@ class GarminConnection(context: Context) :
             return true
         }
         return false
+    }
+
+    private fun isConnected(): Boolean {
+        return _device != null && _app != null
     }
 
     private fun setupApplication(app: IQApp, device: IQDevice) {
@@ -97,31 +122,6 @@ class GarminConnection(context: Context) :
             Log.d(TAG, "Sent message to ${device?.friendlyName} successfully.")
         } else {
             Log.e(TAG, "Failed to send message to ${device?.friendlyName}: $status")
-        }
-    }
-
-    private fun findAndSetupGarminDevice() {
-        Log.w(TAG, "Found ${_connectIQ.connectedDevices.size} known devices.")
-        for (device in _connectIQ.connectedDevices) {
-
-            if (_connectIQ.getDeviceStatus(device) != IQDevice.IQDeviceStatus.CONNECTED) {
-                Log.e(TAG, "Failed to connect to ${device.friendlyName}")
-                continue
-            }
-
-            Log.w(TAG, "Connected to device ${device.friendlyName}")
-
-            registerForConnectionLost(device)
-            _device = device
-            val app = IQApp(CONNECT_IQ_UUID)
-            setupApplication(app, _device!!)
-            // Fix for bug https://forums.garmin.com/developer/connect-iq/i/bug-reports/mobile-sdk-not-working-after-latest-garmin-connect-android-app-update
-            //            _connectIQ.getApplicationInfo(
-//                CONNECT_IQ_UUID,
-//                device,
-//                this
-//            )
-            return
         }
     }
 
