@@ -31,7 +31,7 @@ class PhoneActivityAdapter : ModelUpdateReceiver {
     }
   }
 
-  fun initialize(context: Context, isMock: Boolean = true, onResult: (ConnectionResult) -> Unit = {}) {
+  fun initialize(context: Context, isMock: Boolean = false, onResult: (ConnectionResult) -> Unit = {}) {
     if (isMock) {
       Controllers.activityController = ActivityController(Model.track, MockActivityControl())
       register()
