@@ -65,6 +65,7 @@ class MainActivity : FragmentActivity() {
         super.onPause()
     }
 
+    @Deprecated("Us e onBackPressedDispatcher")
     override fun onBackPressed() {
         if (viewPager.currentItem == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
