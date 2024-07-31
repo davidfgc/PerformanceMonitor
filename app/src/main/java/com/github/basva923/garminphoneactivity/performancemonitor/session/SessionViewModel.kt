@@ -15,7 +15,6 @@ class SessionViewModel: ViewModel() {
 
   private val targetZone = 2..3
   private val inTargetColor = 0xFF228B22
-//  private val onEdgeColor = 0xFF808000
   private val outOfTargetColor = 0xFFDC3B61
 
   private val _uiState = MutableStateFlow<SessionUiState>(SessionUiState.Loading)
@@ -35,7 +34,7 @@ class SessionViewModel: ViewModel() {
 
   private fun initializePhoneActivityAdapter(context: Context) {
     phoneActivityAdapter = PhoneActivityAdapter().apply {
-      initialize(context) {
+      initialize(context, isMock = false) {
         when (it) {
           is ConnectionResult.Error -> { onConnectionError(it.message) }
           is ConnectionResult.Success -> { onConnectionSuccess() }

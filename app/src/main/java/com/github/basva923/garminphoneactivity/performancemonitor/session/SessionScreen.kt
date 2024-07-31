@@ -1,11 +1,11 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -17,13 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.basva923.garminphoneactivity.model.LiveTrackInfo
-import com.github.basva923.garminphoneactivity.model.Track
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRatesZonesRoot
 import com.github.basva923.garminphoneactivity.settings.Settings
 
 @Composable
@@ -73,7 +75,18 @@ private fun SessionLayout(
         style = MaterialTheme.typography.displayMedium
       )
     }
-    HeartRatesZonesRoot(100 * sessionData.heartRate / Settings.ftpHeartRate, modifier = Modifier.safeDrawingPadding().fillMaxSize())
+
+    val lines = HeartRateZones().getTargetZonesColor(listOf(2, 3))
+    HeartRatesZonesRoot(
+      markerPosition = 100 * sessionData.heartRate / Settings.ftpHeartRate,
+      modifier = Modifier
+        .safeDrawingPadding()
+        .align(Alignment.BottomCenter)
+        .drawBehind {
+          drawLine(Color.White, start = Offset(0f, 0f), end = Offset(size.width, 0f), strokeWidth = 1.dp.toPx())
+        },
+      lines = lines
+    )
   }
 }
 
