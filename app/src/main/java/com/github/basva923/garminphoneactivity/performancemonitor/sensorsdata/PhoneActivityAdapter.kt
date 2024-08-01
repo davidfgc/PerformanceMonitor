@@ -12,7 +12,7 @@ import com.github.basva923.garminphoneactivity.model.ModelUpdateReceiver
 import com.github.basva923.garminphoneactivity.model.PropertyType
 import com.github.basva923.garminphoneactivity.performancemonitor.session.EmptySessionData
 import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionData
-import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -31,22 +31,22 @@ class PhoneActivityAdapter : ModelUpdateReceiver {
     }
   }
 
-  fun initialize(context: Context, isMock: Boolean = false, onResult: (ConnectionResult) -> Unit = {}) {
+  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, String>) -> Unit = {}) {
     if (isMock) {
       Controllers.activityController = ActivityController(Model.track, MockActivityControl())
       register()
-      onResult(ConnectionResult.Success)
+      onResult(AppResult.Success(Unit))
     } else {
       val garminConnection = GarminConnection(context)
       garminConnection.initialize(context, false) {
         when (it) {
-          is ConnectionResult.Error -> { onResult(it) }
-          is ConnectionResult.Success -> {
+          is AppResult.Error -> { onResult(it) }
+          is AppResult.Success -> {
             Controllers.activityController = ActivityController(
               Model.track, GarminActivityControl(garminConnection)
             )
             register()
-            onResult(ConnectionResult.Success)
+            onResult(AppResult.Success(Unit))
           }
         }
       }

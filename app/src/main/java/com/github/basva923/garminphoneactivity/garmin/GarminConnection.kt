@@ -6,7 +6,7 @@ import com.garmin.android.connectiq.ConnectIQ
 import com.garmin.android.connectiq.ConnectIQ.IQApplicationInfoListener
 import com.garmin.android.connectiq.IQApp
 import com.garmin.android.connectiq.IQDevice
-import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
 
 class GarminConnection(context: Context) :
     ConnectIQ.IQApplicationEventListener, ConnectIQ.IQSendMessageListener,
@@ -21,18 +21,22 @@ class GarminConnection(context: Context) :
 
     val messageReceivers = mutableSetOf<GarminMessageReceiver>()
 
-    fun initialize(context: Context, autoUI: Boolean = false, onResult: (ConnectionResult) -> Unit = {}) {
+    fun initialize(
+        context: Context,
+        autoUI: Boolean = false,
+        onResult: (AppResult<Unit, String>) -> Unit = {}
+    ) {
         _connectIQ.initialize(context, autoUI, object: ConnectIQ.ConnectIQListener {
             override fun onSdkShutDown() {
                 Log.d(TAG, "GARMIN connect sdk shutdown")
             }
 
             override fun onInitializeError(p0: ConnectIQ.IQSdkErrorStatus?) {
-                onResult(ConnectionResult.Error("GARMIN initialize sdk: error: ${p0?.name}"))
+                onResult(AppResult.Error("GARMIN initialize sdk: error: ${p0?.name}"))
             }
 
             override fun onSdkReady() {
-                onResult(ConnectionResult.Success)
+                onResult(AppResult.Success(Unit))
                 Log.d(TAG, "Garmin sdk ready")
                 findAndSetupGarminDevice()
             }

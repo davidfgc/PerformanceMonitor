@@ -1,11 +1,11 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.settings
 
-import com.github.basva923.garminphoneactivity.performancemonitor.shared.SettingsResult
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
 
 interface SettingsRepository {
   fun getHeartRateTargetZones(): IntRange
   interface SettingsLocalRepository {
-    fun getHeartRateTargetZones(): SettingsResult
+    fun getHeartRateTargetZones(): AppResult<IntRange, String>
   }
 }
 
@@ -16,15 +16,15 @@ class SettingsRepositoryImpl(
 
   override fun getHeartRateTargetZones(): IntRange {
     return when (val res = localRepository.getHeartRateTargetZones()) {
-      is SettingsResult.Success -> res.data
-      is SettingsResult.Error -> defaultTargetZones
+      is AppResult.Success -> res.data
+      is AppResult.Error -> defaultTargetZones
     }
   }
 }
 
 class SettingsLocalRepositoryImpl: SettingsRepository.SettingsLocalRepository {
-  override fun getHeartRateTargetZones(): SettingsResult {
+  override fun getHeartRateTargetZones(): AppResult<IntRange, String> {
     // TODO get from shared preferences
-    return SettingsResult.Error("Not implemented")
+    return AppResult.Error("Not implemented")
   }
 }

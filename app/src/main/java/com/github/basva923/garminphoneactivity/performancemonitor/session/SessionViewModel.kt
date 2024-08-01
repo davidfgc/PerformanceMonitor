@@ -8,7 +8,7 @@ import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones
 import com.github.basva923.garminphoneactivity.performancemonitor.sensorsdata.PhoneActivityAdapter
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
-import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,10 +42,10 @@ class SessionViewModel(
 
   private fun initializePhoneActivityAdapter(context: Context) {
     phoneActivityAdapter = PhoneActivityAdapter().apply {
-      initialize(context, isMock = false) {
+      initialize(context, isMock = true) {
         when (it) {
-          is ConnectionResult.Error -> { onConnectionError(it.message) }
-          is ConnectionResult.Success -> { onConnectionSuccess() }
+          is AppResult.Error -> { onConnectionError(it.error) }
+          is AppResult.Success -> { onConnectionSuccess() }
         }
       }
     }
