@@ -6,6 +6,7 @@ import com.garmin.android.connectiq.ConnectIQ
 import com.garmin.android.connectiq.ConnectIQ.IQApplicationInfoListener
 import com.garmin.android.connectiq.IQApp
 import com.garmin.android.connectiq.IQDevice
+import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.garmin.GarminError
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
 
 class GarminConnection(context: Context) :
@@ -24,7 +25,7 @@ class GarminConnection(context: Context) :
     fun initialize(
         context: Context,
         autoUI: Boolean = false,
-        onResult: (AppResult<Unit, String>) -> Unit = {}
+        onResult: (AppResult<Unit, GarminError>) -> Unit = {}
     ) {
         _connectIQ.initialize(context, autoUI, object: ConnectIQ.ConnectIQListener {
             override fun onSdkShutDown() {
@@ -32,7 +33,7 @@ class GarminConnection(context: Context) :
             }
 
             override fun onInitializeError(p0: ConnectIQ.IQSdkErrorStatus?) {
-                onResult(AppResult.Error("GARMIN initialize sdk: error: ${p0?.name}"))
+                onResult(AppResult.Error(GarminError.SDK_NOT_INITIALIZED))
             }
 
             override fun onSdkReady() {

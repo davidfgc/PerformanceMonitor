@@ -1,6 +1,12 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.shared
 
-sealed interface AppResult<D, E> {
-  data class Success<D, E>(val data: D): AppResult<D, E>
-  data class Error<D, E>(val error: E): AppResult<D, E>
+interface AppError
+
+sealed interface AppResult<D, E: AppError> {
+  data class Success<D, E: AppError>(val data: D): AppResult<D, E>
+  data class Error<D, E: AppError>(val error: E): AppResult<D, E>
+}
+
+sealed interface DevError: AppError {
+  data object NotImplemented: DevError
 }

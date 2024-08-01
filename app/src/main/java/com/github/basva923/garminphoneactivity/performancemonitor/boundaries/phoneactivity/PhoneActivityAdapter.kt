@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.sensorsdata
+package com.github.basva923.garminphoneactivity.performancemonitor.boundaries.phoneactivity
 
 import android.content.Context
 import com.github.basva923.garminphoneactivity.controller.ActivityController
@@ -10,6 +10,7 @@ import com.github.basva923.garminphoneactivity.model.LiveTrackProperty
 import com.github.basva923.garminphoneactivity.model.Model
 import com.github.basva923.garminphoneactivity.model.ModelUpdateReceiver
 import com.github.basva923.garminphoneactivity.model.PropertyType
+import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.garmin.GarminError
 import com.github.basva923.garminphoneactivity.performancemonitor.session.EmptySessionData
 import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionData
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
@@ -31,16 +32,16 @@ class PhoneActivityAdapter : ModelUpdateReceiver {
     }
   }
 
-  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, String>) -> Unit = {}) {
+  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, DeviceError>) -> Unit = {}) {
     if (isMock) {
       Controllers.activityController = ActivityController(Model.track, MockActivityControl())
       register()
       onResult(AppResult.Success(Unit))
     } else {
       val garminConnection = GarminConnection(context)
-      garminConnection.initialize(context, false) {
+      garminConnection.initialize(context, false) { it: AppResult<Unit, GarminError> ->
         when (it) {
-          is AppResult.Error -> { onResult(it) }
+          is AppResult.Error -> onResult(AppResult.Error(DeviceError.SETUP))
           is AppResult.Success -> {
             Controllers.activityController = ActivityController(
               Model.track, GarminActivityControl(garminConnection)

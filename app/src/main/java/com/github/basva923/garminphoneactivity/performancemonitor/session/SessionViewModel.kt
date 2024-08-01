@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.phoneactivity.PhoneActivityAdapter
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
-import com.github.basva923.garminphoneactivity.performancemonitor.sensorsdata.PhoneActivityAdapter
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
@@ -42,9 +42,9 @@ class SessionViewModel(
 
   private fun initializePhoneActivityAdapter(context: Context) {
     phoneActivityAdapter = PhoneActivityAdapter().apply {
-      initialize(context, isMock = true) {
+      initialize(context, isMock = false) {
         when (it) {
-          is AppResult.Error -> { onConnectionError(it.error) }
+          is AppResult.Error -> onConnectionError("ERROR: ${it.error.name}")
           is AppResult.Success -> { onConnectionSuccess() }
         }
       }
