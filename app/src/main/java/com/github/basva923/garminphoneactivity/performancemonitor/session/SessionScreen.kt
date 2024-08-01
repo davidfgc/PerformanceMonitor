@@ -1,7 +1,6 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,13 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRatesZonesRoot
 import com.github.basva923.garminphoneactivity.settings.Settings
 
@@ -40,7 +37,11 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
   }
 
   when (uiState) {
-    is SessionUiState.Success -> SessionLayout(sessionData, modifier.background(Color(backgroundColor)))
+    is SessionUiState.Success -> SessionLayout(
+      sessionData,
+      viewModel.lines,
+      modifier.background(Color(backgroundColor))
+    )
     is SessionUiState.Error -> SessionErrorLayout((uiState as SessionUiState.Error).message, modifier)
     is SessionUiState.Loading -> SessionLoadingLayout(modifier)
   }
@@ -49,6 +50,7 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
 @Composable
 private fun SessionLayout(
   sessionData: SessionData,
+  zonesColorBar: List<Pair<Pair<Int, Int>, Color>>,
   modifier: Modifier = Modifier,
 ) {
   Box {
@@ -76,7 +78,6 @@ private fun SessionLayout(
       )
     }
 
-    val lines = HeartRateZones().getTargetZonesColor(listOf(2, 3))
     HeartRatesZonesRoot(
       markerPosition = 100 * sessionData.heartRate / Settings.ftpHeartRate,
       modifier = Modifier
@@ -85,7 +86,7 @@ private fun SessionLayout(
         .drawBehind {
           drawLine(Color.White, start = Offset(0f, 0f), end = Offset(size.width, 0f), strokeWidth = 1.dp.toPx())
         },
-      lines = lines
+      lines = zonesColorBar
     )
   }
 }

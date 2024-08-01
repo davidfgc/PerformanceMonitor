@@ -1,9 +1,13 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
 import com.github.basva923.garminphoneactivity.performancemonitor.sensorsdata.PhoneActivityAdapter
+import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
+import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.ConnectionResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,9 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class SessionViewModel: ViewModel() {
+class SessionViewModel(
+  settingsRepository: SettingsRepository = SettingsRepositoryImpl()
+): ViewModel() {
 
-  private val targetZone = 2..3
+  private val targetZones: IntRange = settingsRepository.getHeartRateTargetZones()
+  val lines: List<Pair<Pair<Int, Int>, Color>> = HeartRateZones().getTargetZonesColor(targetZones.toList())
+
   private val inTargetColor = 0xFF228B22
   private val outOfTargetColor = 0xFFDC3B61
 
@@ -48,7 +56,7 @@ class SessionViewModel: ViewModel() {
       _uiState.emit(SessionUiState.Success)
       phoneActivityAdapter.sensorsDataFlow.collectLatest {
         _sessionData.emit(it)
-        _backgroundColor.emit(if (it.heartRateZone in targetZone) inTargetColor else outOfTargetColor)
+        _backgroundColor.emit(if (it.heartRateZone in targetZones) inTargetColor else outOfTargetColor)
       }
     }
   }
