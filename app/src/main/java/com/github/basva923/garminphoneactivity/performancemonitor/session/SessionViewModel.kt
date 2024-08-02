@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.phoneactivity.PhoneActivityAdapter
+import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceAdapter
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
@@ -34,15 +34,15 @@ class SessionViewModel(
   private val _backgroundColor = MutableStateFlow<Long>(0)
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
-  private lateinit var phoneActivityAdapter: PhoneActivityAdapter
+  private lateinit var deviceAdapter: DeviceAdapter
 
   fun initialize(context: Context) {
     viewModelScope.launch { initializePhoneActivityAdapter(context) }
   }
 
   private fun initializePhoneActivityAdapter(context: Context) {
-    phoneActivityAdapter = PhoneActivityAdapter().apply {
-      initialize(context, isMock = false) {
+    deviceAdapter = DeviceAdapter().apply {
+      initialize(context, isMock = true) {
         when (it) {
           is AppResult.Error -> onConnectionError("ERROR: ${it.error.name}")
           is AppResult.Success -> { onConnectionSuccess() }
@@ -54,7 +54,7 @@ class SessionViewModel(
   private fun onConnectionSuccess() {
     viewModelScope.launch {
       _uiState.emit(SessionUiState.Success)
-      phoneActivityAdapter.sensorsDataFlow.collectLatest {
+      deviceAdapter.sensorsDataFlow.collectLatest {
         _sessionData.emit(it)
         _backgroundColor.emit(if (it.heartRateZone in targetZones) inTargetColor else outOfTargetColor)
       }
@@ -67,7 +67,7 @@ class SessionViewModel(
 
   override fun onCleared() {
     super.onCleared()
-    phoneActivityAdapter.unregister()
+    deviceAdapter.unregister()
   }
 }
 

@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.boundaries.phoneactivity
+package com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device
 
 import android.content.Context
 import com.github.basva923.garminphoneactivity.controller.ActivityController
@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class PhoneActivityAdapter : ModelUpdateReceiver {
+class DeviceAdapter : ModelUpdateReceiver {
 
   private var lastSessionData: SessionData = EmptySessionData()
 
