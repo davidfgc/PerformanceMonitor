@@ -22,7 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRatesZonesRoot
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.ui.HeartRateTargetZones
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.UserHeartRate
 import com.github.basva923.garminphoneactivity.settings.Settings
 
 @Composable
@@ -39,7 +41,7 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
   when (uiState) {
     is SessionUiState.Success -> SessionLayout(
       sessionData,
-      viewModel.lines,
+      viewModel.targetZones,
       modifier.background(Color(backgroundColor))
     )
     is SessionUiState.Error -> SessionErrorLayout((uiState as SessionUiState.Error).message, modifier)
@@ -50,9 +52,10 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
 @Composable
 private fun SessionLayout(
   sessionData: SessionData,
-  zonesColorBar: List<Pair<Pair<Int, Int>, Color>>,
+  targetZones: List<HeartRateZone>,
   modifier: Modifier = Modifier,
 ) {
+  val markerPosition = UserHeartRate(Settings.ftpHeartRate).getPercentage(sessionData.heartRate)
   Box {
     Column(
       modifier = modifier
@@ -78,15 +81,15 @@ private fun SessionLayout(
       )
     }
 
-    HeartRatesZonesRoot(
-      markerPosition = 100 * sessionData.heartRate / Settings.ftpHeartRate,
+    HeartRateTargetZones(
+      markerPosition = markerPosition,
       modifier = Modifier
         .safeDrawingPadding()
         .align(Alignment.BottomCenter)
         .drawBehind {
           drawLine(Color.White, start = Offset(0f, 0f), end = Offset(size.width, 0f), strokeWidth = 1.dp.toPx())
         },
-      lines = zonesColorBar
+      targetZones = targetZones,
     )
   }
 }

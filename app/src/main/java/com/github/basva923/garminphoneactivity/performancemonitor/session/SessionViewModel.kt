@@ -1,11 +1,10 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceAdapter
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.HeartRateZones
+import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
@@ -19,8 +18,8 @@ class SessionViewModel(
   settingsRepository: SettingsRepository = SettingsRepositoryImpl()
 ): ViewModel() {
 
-  private val targetZones: IntRange = settingsRepository.getHeartRateTargetZones()
-  val lines: List<Pair<Pair<Int, Int>, Color>> = HeartRateZones().getTargetZonesColor(targetZones.toList())
+  private val targetZonesRange: IntRange = settingsRepository.getHeartRateTargetZones()
+  val targetZones = listOf(HeartRateZone.EASY, HeartRateZone.AEROBIC)
 
   private val inTargetColor = 0xFF228B22
   private val outOfTargetColor = 0xFFDC3B61
@@ -42,7 +41,7 @@ class SessionViewModel(
 
   private fun initializePhoneActivityAdapter(context: Context) {
     deviceAdapter = DeviceAdapter().apply {
-      initialize(context, isMock = true) {
+      initialize(context, isMock = false) {
         when (it) {
           is AppResult.Error -> onConnectionError("ERROR: ${it.error.name}")
           is AppResult.Success -> { onConnectionSuccess() }
@@ -56,7 +55,7 @@ class SessionViewModel(
       _uiState.emit(SessionUiState.Success)
       deviceAdapter.sensorsDataFlow.collectLatest {
         _sessionData.emit(it)
-        _backgroundColor.emit(if (it.heartRateZone in targetZones) inTargetColor else outOfTargetColor)
+        _backgroundColor.emit(if (it.heartRateZone in targetZonesRange) inTargetColor else outOfTargetColor)
       }
     }
   }

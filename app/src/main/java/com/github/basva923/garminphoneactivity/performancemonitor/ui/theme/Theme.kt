@@ -8,6 +8,7 @@ private val DarkColorScheme = darkColorScheme(
   primary = AppRed,
   onPrimary = AppWhite,
   secondary = AppGreen,
+  tertiary = AppYellow,
   onSecondary = AppGreen,
   background = AppBlack,
   onBackground = AppWhite,
