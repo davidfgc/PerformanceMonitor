@@ -71,9 +71,16 @@ class DeviceAdapter : ModelUpdateReceiver {
         .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE_ZONE).toInt()
       override val time: Int = Model.track.liveTrackInfo
         .getValue(PropertyType.CURRENT, LiveTrackProperty.TIME).toInt()
-      override val altitude: Int = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.ALTITUDE).toInt()
+      override val cadence: Int = Model.track.liveTrackInfo
+        .getValue(PropertyType.CURRENT, LiveTrackProperty.CADENCE).toInt()
+      override val speed: Float = Model.track.liveTrackInfo
+        .getValue(PropertyType.CURRENT, LiveTrackProperty.SPEED).toFloat()
+      override val distance: Float = Model.track.liveTrackInfo
+        .getValue(PropertyType.CURRENT, LiveTrackProperty.DISTANCE).toFloat()
+      override val latitude: Double = Model.track.liveTrackInfo
+        .getValue(PropertyType.CURRENT, LiveTrackProperty.LATITUDE)
+      override val longitude: Double = Model.track.liveTrackInfo
+        .getValue(PropertyType.CURRENT, LiveTrackProperty.LONGITUDE)
     }
   }
-
 }

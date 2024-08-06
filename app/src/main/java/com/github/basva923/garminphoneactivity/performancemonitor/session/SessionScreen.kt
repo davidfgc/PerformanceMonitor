@@ -26,6 +26,7 @@ import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.UserHeartRate
 import com.github.basva923.garminphoneactivity.settings.Settings
+import java.util.Locale
 
 @Composable
 fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = viewModel()) {
@@ -75,8 +76,17 @@ private fun SessionLayout(
         text = "Time: ${sessionData.time}",
         style = MaterialTheme.typography.displayMedium
       )
+      Text(text = "Cadence: ${sessionData.cadence}", style = MaterialTheme.typography.displayMedium)
       Text(
-        text = "Altitude: ${sessionData.altitude}",
+        text = "Speed: ${String.format(Locale.US, "%.2f", sessionData.speed)}",
+        style = MaterialTheme.typography.displayMedium
+      )
+      Text(
+        text = "Latitude: ${String.format(Locale.US, "%.2f", sessionData.latitude)}",
+        style = MaterialTheme.typography.displayMedium
+      )
+      Text(
+        text = "Longitude: ${String.format(Locale.US, "%.2f", sessionData.longitude)}",
         style = MaterialTheme.typography.displayMedium
       )
     }
