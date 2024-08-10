@@ -1,5 +1,7 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.ui
 
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -35,6 +38,13 @@ fun HeartRateZones(
 
 @Composable
 fun LinearZones(markerPosition: Int, zones: List<Zone>, modifier: Modifier = Modifier, height: Dp = 10.dp) {
+
+  val animatePosition by animateIntAsState(
+    targetValue = markerPosition,
+    animationSpec = tween(durationMillis = 1000),
+    label = ""
+  )
+
   Canvas(modifier = modifier
     .fillMaxWidth()
     .height(height)) {
@@ -49,7 +59,7 @@ fun LinearZones(markerPosition: Int, zones: List<Zone>, modifier: Modifier = Mod
         strokeWidth = height.toPx()
       )
     }
-    val markerCenter = size.width * markerPosition / 100
+    val markerCenter = size.width * animatePosition / 100
     val path = Path().apply {
       moveTo(markerCenter, 0f)
       lineTo(markerCenter - height.toPx() / 2, height.toPx() / 2)
@@ -100,7 +110,10 @@ private fun HeartRateZonesWithTargetPreview() {
     val targetZones = listOf(HeartRateZone.AEROBIC, HeartRateZone.THRESHOLD)
     val markerPosition = 75
 
-    Column(Modifier.background(MaterialTheme.colorScheme.background).fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+    Column(
+      Modifier
+        .background(MaterialTheme.colorScheme.background)
+        .fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
       HeartRateZones(markerPosition)
       HeartRateTargetZones(markerPosition, targetZones)
     }

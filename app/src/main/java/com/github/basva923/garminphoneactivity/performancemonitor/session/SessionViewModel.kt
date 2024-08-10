@@ -35,7 +35,7 @@ class SessionViewModel(
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
   fun initialize(context: Context) {
-    DeviceAdapter().initialize(context, isMock = true, ::onResult)
+    DeviceAdapter().initialize(context, isMock = false, ::onResult)
       .onEach {
         _sessionData.emit(it)
         _backgroundColor.emit(if (it.heartRateZone in targetZonesRange) inTargetColor else outOfTargetColor)
