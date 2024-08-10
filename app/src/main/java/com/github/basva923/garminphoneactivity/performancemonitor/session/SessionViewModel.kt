@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceAdapter
+import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceError
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
@@ -11,8 +12,8 @@ import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResu
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class SessionViewModel(
   settingsRepository: SettingsRepository = SettingsRepositoryImpl()
@@ -33,40 +34,23 @@ class SessionViewModel(
   private val _backgroundColor = MutableStateFlow<Long>(0)
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
-  private lateinit var deviceAdapter: DeviceAdapter
-
   fun initialize(context: Context) {
-    viewModelScope.launch { initializePhoneActivityAdapter(context) }
-  }
-
-  private fun initializePhoneActivityAdapter(context: Context) {
-    deviceAdapter = DeviceAdapter().apply {
-      initialize(context, isMock = false) {
-        when (it) {
-          is AppResult.Error -> onConnectionError("ERROR: ${it.error.name}")
-          is AppResult.Success -> { onConnectionSuccess() }
-        }
-      }
-    }
-  }
-
-  private fun onConnectionSuccess() {
-    viewModelScope.launch {
-      _uiState.emit(SessionUiState.Success)
-      deviceAdapter.sensorsDataFlow.collectLatest {
+    DeviceAdapter().initialize(context, isMock = true, ::onResult)
+      .onEach {
         _sessionData.emit(it)
         _backgroundColor.emit(if (it.heartRateZone in targetZonesRange) inTargetColor else outOfTargetColor)
+      }.launchIn(viewModelScope)
+  }
+
+  private fun onResult(appResult: AppResult<Unit, DeviceError>) {
+    when (appResult) {
+      is AppResult.Error -> {
+        _uiState.value = SessionUiState.Error("Error initializing device")
+      }
+      is AppResult.Success -> {
+        _uiState.value = SessionUiState.Success
       }
     }
-  }
-
-  private fun onConnectionError(message: String) {
-    viewModelScope.launch { _uiState.emit(SessionUiState.Error(message)) }
-  }
-
-  override fun onCleared() {
-    super.onCleared()
-    deviceAdapter.unregister()
   }
 }
 

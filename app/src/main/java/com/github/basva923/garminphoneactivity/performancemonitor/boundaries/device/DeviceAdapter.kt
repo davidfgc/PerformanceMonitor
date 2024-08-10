@@ -11,32 +11,22 @@ import com.github.basva923.garminphoneactivity.model.Model
 import com.github.basva923.garminphoneactivity.model.ModelUpdateReceiver
 import com.github.basva923.garminphoneactivity.model.PropertyType
 import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.garmin.GarminError
-import com.github.basva923.garminphoneactivity.performancemonitor.session.EmptySessionData
 import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionData
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 
-class DeviceAdapter : ModelUpdateReceiver {
+class DeviceAdapter {
 
-  private var lastSessionData: SessionData = EmptySessionData()
+  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, DeviceError>) -> Unit = {}): Flow<SessionData> {
+    var res: Flow<SessionData> = flowOf()
 
-  val sensorsDataFlow: Flow<SessionData> = flow {
-    while (true) {
-
-      if (lastSessionData !is EmptySessionData) {
-        emit(lastSessionData)
-      }
-      delay(1000)
-    }
-  }
-
-  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, DeviceError>) -> Unit = {}) {
     if (isMock) {
       Controllers.activityController = ActivityController(Model.track, MockActivityControl())
-      register()
       onResult(AppResult.Success(Unit))
+      res = observeDeviceData()
     } else {
       val garminConnection = GarminConnection(context)
       garminConnection.initialize(context, false) { it: AppResult<Unit, GarminError> ->
@@ -46,41 +36,47 @@ class DeviceAdapter : ModelUpdateReceiver {
             Controllers.activityController = ActivityController(
               Model.track, GarminActivityControl(garminConnection)
             )
-            register()
             onResult(AppResult.Success(Unit))
+            res = observeDeviceData()
           }
         }
       }
     }
+
+    return res
   }
 
-  private fun register() {
-    Model.modelUpdateReceivers.add(this)
-  }
+  private fun observeDeviceData(): Flow<SessionData> {
+    return callbackFlow {
+      Model.modelUpdateReceivers.add(object: ModelUpdateReceiver {
+        override fun onModelUpdate() {
+          val sessionData = object: SessionData {
+            override val heartRate: Int = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE).toInt()
+            override val heartRateZone: Int = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE_ZONE).toInt()
+            override val time: Int = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.TIME).toInt()
+            override val cadence: Int = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.CADENCE).toInt()
+            override val speed: Float = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.SPEED).toFloat()
+            override val distance: Float = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.DISTANCE).toFloat()
+            override val latitude: Double = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.LATITUDE)
+            override val longitude: Double = Model.track.liveTrackInfo
+              .getValue(PropertyType.CURRENT, LiveTrackProperty.LONGITUDE)
+          }
 
-  fun unregister() {
-    Model.modelUpdateReceivers.remove(this)
-  }
+          trySend(sessionData)
+        }
+      })
 
-  override fun onModelUpdate()  {
-    Model.track.liveTrackInfo.hrZoneFinder.valueToZone(0)
-    lastSessionData = object: SessionData {
-      override val heartRate: Int = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE).toInt()
-      override val heartRateZone: Int = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.HEART_RATE_ZONE).toInt()
-      override val time: Int = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.TIME).toInt()
-      override val cadence: Int = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.CADENCE).toInt()
-      override val speed: Float = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.SPEED).toFloat()
-      override val distance: Float = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.DISTANCE).toFloat()
-      override val latitude: Double = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.LATITUDE)
-      override val longitude: Double = Model.track.liveTrackInfo
-        .getValue(PropertyType.CURRENT, LiveTrackProperty.LONGITUDE)
+      awaitClose {
+        Model.modelUpdateReceivers.clear()
+      }
     }
   }
+
 }
