@@ -1,5 +1,7 @@
 package com.github.basva923.garminphoneactivity.performancemonitor.session
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,12 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
   val sessionData by viewModel.sessionData.collectAsState()
   val backgroundColor by viewModel.backgroundColor.collectAsState()
 
+  val animateColor by animateColorAsState(
+    targetValue = Color(backgroundColor),
+    animationSpec = tween(durationMillis = 1000),
+    label = ""
+  )
+
   val context = LocalContext.current
   LaunchedEffect(key1 = Unit) {
     viewModel.initialize(context)
@@ -43,7 +51,7 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
     is SessionUiState.Success -> SessionLayout(
       sessionData,
       viewModel.targetZones,
-      modifier.background(Color(backgroundColor))
+      modifier.background(animateColor)
     )
     is SessionUiState.Error -> SessionErrorLayout((uiState as SessionUiState.Error).message, modifier)
     is SessionUiState.Loading -> SessionLoadingLayout(modifier)
