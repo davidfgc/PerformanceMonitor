@@ -28,6 +28,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField("Boolean", "USE_MOCKS", "${System.env.USE_MOCKS ?: true}")
     }
 
     buildTypes {
