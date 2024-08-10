@@ -20,13 +20,10 @@ import kotlinx.coroutines.flow.flowOf
 
 class DeviceAdapter {
 
-  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, DeviceError>) -> Unit = {}): Flow<SessionData> {
-    var res: Flow<SessionData> = flowOf()
-
+  fun initialize(context: Context, isMock: Boolean = false, onResult: (AppResult<Unit, DeviceError>) -> Unit = {}) {
     if (isMock) {
       Controllers.activityController = ActivityController(Model.track, MockActivityControl())
       onResult(AppResult.Success(Unit))
-      res = observeDeviceData()
     } else {
       val garminConnection = GarminConnection(context)
       garminConnection.initialize(context, false) { it: AppResult<Unit, GarminError> ->
@@ -37,16 +34,13 @@ class DeviceAdapter {
               Model.track, GarminActivityControl(garminConnection)
             )
             onResult(AppResult.Success(Unit))
-            res = observeDeviceData()
           }
         }
       }
     }
-
-    return res
   }
 
-  private fun observeDeviceData(): Flow<SessionData> {
+  fun observeDeviceData(): Flow<SessionData> {
     return callbackFlow {
       Model.modelUpdateReceivers.add(object: ModelUpdateReceiver {
         override fun onModelUpdate() {

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceAdapter
-import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceError
 import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
@@ -16,7 +15,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class SessionViewModel(
-  settingsRepository: SettingsRepository = SettingsRepositoryImpl()
+  private val deviceAdapter: DeviceAdapter = DeviceAdapter(),
+  settingsRepository: SettingsRepository = SettingsRepositoryImpl(),
 ): ViewModel() {
 
   private val targetZonesRange: IntRange = settingsRepository.getHeartRateTargetZones()
@@ -35,23 +35,21 @@ class SessionViewModel(
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
   fun initialize(context: Context) {
-    DeviceAdapter().initialize(context, isMock = false, ::onResult)
-      .onEach {
-        _sessionData.emit(it)
-        _backgroundColor.emit(if (it.heartRateZone in targetZonesRange) inTargetColor else outOfTargetColor)
-      }.launchIn(viewModelScope)
-  }
-
-  private fun onResult(appResult: AppResult<Unit, DeviceError>) {
-    when (appResult) {
-      is AppResult.Error -> {
-        _uiState.value = SessionUiState.Error("Error initializing device")
-      }
-      is AppResult.Success -> {
-        _uiState.value = SessionUiState.Success
+    deviceAdapter.initialize(context, isMock = false) { initializeResult ->
+      when (initializeResult) {
+        is AppResult.Error -> _uiState.value = SessionUiState.Error("Error initializing device")
+        is AppResult.Success -> {
+          deviceAdapter.observeDeviceData()
+            .onEach {
+              _sessionData.emit(it)
+              _backgroundColor.emit(if (it.heartRateZone in targetZonesRange) inTargetColor else outOfTargetColor)
+            }.launchIn(viewModelScope)
+          _uiState.value = SessionUiState.Success
+        }
       }
     }
   }
+
 }
 
 sealed class SessionUiState {
