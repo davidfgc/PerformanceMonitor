@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain
+package com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain
 
 enum class HeartRateZone(val percentageRange: IntRange, val color: Color) {
   WARM_UP(IntRange(50, 60), Color.GRAY),

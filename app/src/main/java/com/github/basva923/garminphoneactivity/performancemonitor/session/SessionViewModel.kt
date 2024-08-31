@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.basva923.garminphoneactivity.performancemonitor.boundaries.device.DeviceAdapter
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepository
 import com.github.basva923.garminphoneactivity.performancemonitor.settings.SettingsRepositoryImpl
 import com.github.basva923.garminphoneactivity.performancemonitor.shared.AppResult
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.onEach
 
 class SessionViewModel(
   private val deviceAdapter: DeviceAdapter = DeviceAdapter(),
-  settingsRepository: SettingsRepository = SettingsRepositoryImpl(),
+  private val settingsRepository: SettingsRepository = SettingsRepositoryImpl(),
 ): ViewModel() {
 
   private val targetZonesRange: IntRange = settingsRepository.getHeartRateTargetZones()
@@ -35,7 +35,7 @@ class SessionViewModel(
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
   fun initialize(context: Context) {
-    deviceAdapter.initialize(context, isMock = false) { initializeResult ->
+    deviceAdapter.initialize(context, isMock = true) { initializeResult ->
       when (initializeResult) {
         is AppResult.Error -> _uiState.value = SessionUiState.Error("Error initializing device")
         is AppResult.Success -> {

@@ -24,9 +24,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.ui.HeartRateTargetZones
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.UserHeartRate
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.ui.HeartRateTargetZones
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain.HeartRateZone
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain.UserHeartRate
 import com.github.basva923.garminphoneactivity.settings.Settings
 import java.util.Locale
 

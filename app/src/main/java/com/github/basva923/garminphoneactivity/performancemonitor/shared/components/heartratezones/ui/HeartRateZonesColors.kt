@@ -1,6 +1,6 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.ui
+package com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.ui
 
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.AppBlue
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.AppGray
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.AppGreen

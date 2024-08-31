@@ -1,4 +1,4 @@
-package com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.ui
+package com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.ui
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.basva923.garminphoneactivity.performancemonitor.heartratezones.domain.HeartRateZone
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.heartratezones.domain.HeartRateZone
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.AppGreen
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.AppRed
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.GarminPhoneActivityTheme
@@ -27,10 +27,10 @@ import kotlin.math.min
 
 @Composable
 fun HeartRateZones(
-  markerPosition: Int,
-  modifier: Modifier = Modifier,
-  heartRateZones: List<HeartRateZone> = HeartRateZone.entries,
-  height: Dp = 10.dp
+    markerPosition: Int,
+    modifier: Modifier = Modifier,
+    heartRateZones: List<HeartRateZone> = HeartRateZone.entries,
+    height: Dp = 10.dp
 ) {
   val zones = heartRateZones.map { Zone(it.percentageRange, it.asColor()) }
   LinearZones(markerPosition, zones, modifier, height)
@@ -75,11 +75,11 @@ data class Zone(val range: IntRange, val color: Color)
 
 @Composable
 fun HeartRateTargetZones(
-  markerPosition: Int,
-  targetZones: List<HeartRateZone>,
-  modifier: Modifier = Modifier,
-  heartRateZones: List<HeartRateZone> = HeartRateZone.entries,
-  height: Dp = 10.dp
+    markerPosition: Int,
+    targetZones: List<HeartRateZone>,
+    modifier: Modifier = Modifier,
+    heartRateZones: List<HeartRateZone> = HeartRateZone.entries,
+    height: Dp = 10.dp
 ) {
   val zones = heartRateZones.map {
     val color = if (targetZones.contains(it)) AppGreen
