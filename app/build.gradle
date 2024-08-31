@@ -59,40 +59,44 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.viewpager2:viewpager2:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
-    implementation 'androidx.activity:activity-compose:1.9.1'
+    implementation libs.kotlin.stdlib
+    implementation libs.core.ktx
+    implementation libs.appcompat
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
+    implementation libs.constraintlayout
+    implementation libs.viewpager2
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.activity.compose
 
-    implementation platform('androidx.compose:compose-bom:2024.04.01')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4'
+    implementation platform(libs.compose.bom)
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation libs.material3
+    implementation libs.lifecycle.viewmodel.compose
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation libs.junit
 
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
 
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    implementation libs.gson
 
-    implementation 'com.jjoe64:graphview:4.2.2'
-    implementation group: 'joda-time', name: 'joda-time', version: '2.10.6'
+    implementation libs.graphview
+    implementation libs.joda.time
 
-    implementation "com.garmin.connectiq:ciq-companion-app-sdk:2.0.3@aar"
+    implementation (libs.garmin.companion.app.sdk) {
+        artifact {
+            type = 'aar'
+        }
+    }
 
 //    implementation ('com.mapbox.mapboxsdk:mapbox-android-sdk:9.4.0')
 //    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0'
 
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.04.01')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.ui.test.junit4
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.ui.test.manifest
 }

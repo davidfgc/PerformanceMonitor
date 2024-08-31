@@ -1,0 +1,46 @@
+[versions]
+activityCompose = "1.9.1"
+appcompat = "1.7.0"
+garminCompanionAppSdk = "2.0.3"
+composeBom = "2024.08.00"
+constraintlayout = "2.1.4"
+coreKtx = "1.13.1"
+espressoCore = "3.6.1"
+graphview = "4.2.2"
+gson = "2.10.1"
+jodaTime = "2.10.14"
+junit = "4.13.2"
+junit-ext = "1.2.1"
+kotlin = "1.9.0"
+lifecycleRuntimeKtx = "2.8.4"
+navigationFragmentKtx = "2.7.7"
+viewpager2 = "1.1.0"
+
+[libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+garmin-companion-app-sdk = { module = "com.garmin.connectiq:ciq-companion-app-sdk", version.ref = "garminCompanionAppSdk" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+ext-junit = { module = "androidx.test.ext:junit", version.ref = "junit-ext" }
+graphview = { module = "com.jjoe64:graphview", version.ref = "graphview" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+material3 = { module = "androidx.compose.material3:material3" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+ui = { module = "androidx.compose.ui:ui" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+
+[plugins]
