@@ -35,7 +35,7 @@ class SessionViewModel(
   val backgroundColor: StateFlow<Long> = _backgroundColor.asStateFlow()
 
   fun initialize(context: Context) {
-    deviceAdapter.initialize(context, isMock = true) { initializeResult ->
+    deviceAdapter.initialize(context, isMock = settingsRepository.getBuildConfig().useMocks) { initializeResult ->
       when (initializeResult) {
         is AppResult.Error -> _uiState.value = SessionUiState.Error("Error initializing device")
         is AppResult.Success -> {
