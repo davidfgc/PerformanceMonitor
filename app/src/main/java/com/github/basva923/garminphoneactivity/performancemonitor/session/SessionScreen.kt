@@ -59,12 +59,14 @@ fun SessionScreen(modifier: Modifier = Modifier, viewModel: SessionViewModel = v
 }
 
 @Composable
-private fun SessionLayout(
+fun SessionLayout(
   sessionData: SessionData,
   targetZones: List<HeartRateZone>,
   modifier: Modifier = Modifier,
 ) {
+
   val markerPosition = UserHeartRate(Settings.ftpHeartRate).getPercentage(sessionData.heartRate)
+
   Box {
     Column(
       modifier = modifier

@@ -39,7 +39,8 @@ class SettingsLocalRepositoryImpl: SettingsRepository.SettingsLocalRepository {
   }
 
   override fun getBuildConfig(): AppBuildConfig {
-    val useMocks: Boolean = BuildConfig.USE_MOCKS
+//    val useMocks: Boolean = BuildConfig.USE_MOCKS
+    val useMocks: Boolean = true
 
     return AppBuildConfig(useMocks)
   }
