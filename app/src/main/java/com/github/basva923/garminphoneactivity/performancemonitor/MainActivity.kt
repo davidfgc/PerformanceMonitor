@@ -15,6 +15,7 @@ import com.github.basva923.garminphoneactivity.garmin.GarminConnection
 import com.github.basva923.garminphoneactivity.garmin.MockActivityControl
 import com.github.basva923.garminphoneactivity.model.Model
 import com.github.basva923.garminphoneactivity.performancemonitor.session.SessionScreen
+import com.github.basva923.garminphoneactivity.performancemonitor.shared.components.map.MapScreen
 import com.github.basva923.garminphoneactivity.performancemonitor.ui.theme.GarminPhoneActivityTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,8 @@ class MainActivity : ComponentActivity() {
     setContent {
       GarminPhoneActivityTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          SessionScreen(Modifier.padding(innerPadding))
+//          SessionScreen(Modifier.padding(innerPadding))
+          MapScreen(Modifier.padding(innerPadding))
         }
       }
     }
