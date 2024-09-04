@@ -13,6 +13,7 @@ junit = "4.13.2"
 junit-ext = "1.2.1"
 kotlin = "1.9.0"
 lifecycleRuntimeKtx = "2.8.4"
+mapbox = "11.6.0"
 navigationFragmentKtx = "2.7.7"
 viewpager2 = "1.1.0"
 
@@ -32,6 +33,8 @@ junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+mapbox-maps = { module = "com.mapbox.maps:android", version.ref = "mapbox" }
+mapbox-maps-compose = { module = "com.mapbox.extension:maps-compose", version.ref = "mapbox" }
 material3 = { module = "androidx.compose.material3:material3" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
